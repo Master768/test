@@ -8,7 +8,7 @@ load_dotenv()
 # MongoDB configuration
 # For MongoDB Atlas, use connection string format:
 # mongodb+srv://<username>:<password>@<cluster>.mongodb.net/?retryWrites=true&w=majority
-MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017")
+MONGO_URL = os.getenv("MONGO_URL", "mongodb+srv://secretsanta_user:cezG5iNa85hodn5W@cluster0.wkmbhfh.mongodb.net/?appName=Cluster0")
 DB_NAME = os.getenv("DB_NAME", "secret_santa_db")
 
 class Database:
