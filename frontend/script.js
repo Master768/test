@@ -202,7 +202,12 @@ function showView(viewId) {
 }
 
 // API Helpers
-const API_URL = '/api';
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+const API_BASE = isLocal
+    ? 'http://localhost:8080'
+    : 'https://secret-santa-api.onrender.com'; // REPLACE THIS WITH YOUR ACTUAL RENDER BACKEND URL
+
+const API_URL = `${API_BASE}/api`;
 
 async function apiCall(endpoint, method = 'GET', body = null) {
     const options = {
@@ -394,7 +399,8 @@ function connectWebSocket() {
     if (ws) ws.close();
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}/ws/${currentRoom.code}/${currentUser.name}`;
+    const host = API_BASE ? API_BASE.replace(/^https?:\/\//, '') : window.location.host;
+    const wsUrl = `${protocol}//${host}/ws/${currentRoom.code}/${currentUser.name}`;
 
     ws = new WebSocket(wsUrl);
 

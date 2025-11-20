@@ -108,11 +108,35 @@ async def create_room(request: CreateRoomRequest):
         code=room_code, 
         name=request.room_name, 
         participants=[host],
-        exchange_date=request.exchange_date
+        exchange_date=None  # Date is set later
     )
     
     await db.db.rooms.insert_one(room.dict())
     return room
+
+class SetDateRequest(BaseModel):
+    exchange_date: str
+
+@app.post("/api/rooms/{room_code}/date")
+async def set_exchange_date(room_code: str, body: SetDateRequest):
+    """Set the exchange date for the room (Host only)."""
+    room_data = await db.db.rooms.find_one({"code": room_code})
+    if not room_data:
+        raise HTTPException(status_code=404, detail="Room not found")
+    
+    await db.db.rooms.update_one(
+        {"code": room_code},
+        {"$set": {"exchange_date": body.exchange_date}}
+    )
+    
+    # Broadcast date update
+    msg = json.dumps({
+        "type": "date_updated",
+        "exchange_date": body.exchange_date
+    })
+    await manager.broadcast(msg, room_code)
+    
+    return {"message": "Date updated"}
 
 @app.get("/api/rooms/{room_code}", response_model=Room)
 async def get_room(room_code: str):
@@ -328,3 +352,7 @@ async def websocket_endpoint(websocket: WebSocket, room_code: str, user_name: st
         manager.disconnect(websocket, room_code)
 # Mount static files
 app.mount("/", StaticFiles(directory="frontend", html=True), name="static")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("backend.main:app", host="0.0.0.0", port=8000, reload=True)
