@@ -205,7 +205,7 @@ function showView(viewId) {
 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
 const API_BASE = isLocal
     ? 'http://localhost:8080'
-    : 'https://test-5qw6.onrender.com/'; // REPLACE THIS WITH YOUR ACTUAL RENDER BACKEND URL
+    : 'https://test-5qw6.onrender.com'; // REPLACE THIS WITH YOUR ACTUAL RENDER BACKEND URL
 
 const API_URL = `${API_BASE}/api`;
 
