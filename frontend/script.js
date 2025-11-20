@@ -12,9 +12,34 @@ const emojis = ['😀', '😂', '😍', '🥰', '😎', '🤩', '😊', '😁', 
 lucide.createIcons();
 
 // URL Parameter Detection - Auto-join from shareable link
-window.addEventListener('DOMContentLoaded', () => {
+// URL Parameter Detection - Auto-join from shareable link & Session Restoration
+window.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const roomCode = urlParams.get('room');
+
+    // Check for existing session
+    const session = localStorage.getItem('secret_santa_session');
+
+    if (session && !roomCode) {
+        try {
+            const { roomCode: savedCode, user } = JSON.parse(session);
+            // Verify session is still valid
+            const room = await apiCall(`/rooms/${savedCode}`);
+            const participant = room.participants.find(p => p.id === user.id);
+
+            if (participant) {
+                currentUser = participant;
+                currentRoom = room;
+                enterLobby();
+                return; // Skip auto-join if session restored
+            } else {
+                localStorage.removeItem('secret_santa_session');
+            }
+        } catch (e) {
+            console.log("Session invalid or expired");
+            localStorage.removeItem('secret_santa_session');
+        }
+    }
 
     if (roomCode) {
         // Auto-fill room code and show join view
@@ -25,6 +50,17 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+function saveSession(room, user) {
+    localStorage.setItem('secret_santa_session', JSON.stringify({
+        roomCode: room.code,
+        user: user
+    }));
+}
+
+function clearSession() {
+    localStorage.removeItem('secret_santa_session');
+}
 
 // Snow Effect
 function createSnow() {
@@ -186,6 +222,13 @@ function showView(viewId) {
         if (el) el.classList.add('hidden');
     });
 
+    // Clear session if going home
+    if (viewId === 'home') {
+        clearSession();
+        currentUser = null;
+        currentRoom = null;
+    }
+
     const target = document.getElementById(`view-${viewId}`);
     if (target) target.classList.remove('hidden');
 
@@ -205,7 +248,7 @@ function showView(viewId) {
 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
 const API_BASE = isLocal
     ? 'http://localhost:8080'
-    : 'https://test-5qw6.onrender.com'; // REPLACE THIS WITH YOUR ACTUAL RENDER BACKEND URL
+    : 'https://test-5qw6.onrender.com/'; // REPLACE THIS WITH YOUR ACTUAL RENDER BACKEND URL
 
 const API_URL = `${API_BASE}/api`;
 
@@ -537,6 +580,7 @@ async function createRoom() {
         });
         currentUser = room.participants[0];
         currentRoom = room;
+        saveSession(room, currentUser);
         enterLobby();
     } catch (e) {
         alert(e.message);
@@ -565,6 +609,7 @@ async function joinRoom() {
         });
         currentUser = participant;
         currentRoom = await apiCall(`/rooms/${code}`);
+        saveSession(currentRoom, currentUser);
         enterLobby();
     } catch (e) {
         alert(e.message);
@@ -592,6 +637,7 @@ async function closeRoom() {
     try {
         await apiCall(`/rooms/${currentRoom.code}`, 'DELETE');
         alert("Room closed and data deleted.");
+        clearSession();
         window.location.reload();
     } catch (e) {
         alert("Failed to close room: " + e.message);
