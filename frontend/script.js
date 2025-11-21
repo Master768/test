@@ -248,7 +248,7 @@ function showView(viewId) {
 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
 const API_BASE = isLocal
     ? 'http://localhost:8080'
-    : 'https://test-5qw6.onrender.com/'; // REPLACE THIS WITH YOUR ACTUAL RENDER BACKEND URL
+    : window.location.origin; // Automatically uses the current domain
 
 const API_URL = `${API_BASE}/api`;
 
@@ -566,7 +566,7 @@ async function createRoom() {
     const pref = prefInput.value.trim();
     const secret = secretInput.value.trim();
 
-    if (!name) return alert('Please enter your name');
+    if (!name) return showErrorModal('🎅 Name Required', 'Please enter your name to create a room!');
 
     try {
         const room = await apiCall('/rooms', 'POST', {
@@ -580,7 +580,7 @@ async function createRoom() {
         saveSession(room, currentUser);
         enterLobby();
     } catch (e) {
-        alert(e.message);
+        showErrorModal('⚠️ Creation Failed', e.message || 'Could not create the room. Please try again.');
     }
 }
 
@@ -595,7 +595,7 @@ async function joinRoom() {
     const pref = prefInput.value.trim();
     const secret = secretInput.value.trim();
 
-    if (!code || !name) return alert('Please fill in all fields');
+    if (!code || !name) return showErrorModal('🎅 Missing Info', 'Please enter the room code and your name!');
 
     try {
         const participant = await apiCall('/rooms/join', 'POST', {
@@ -609,7 +609,7 @@ async function joinRoom() {
         saveSession(currentRoom, currentUser);
         enterLobby();
     } catch (e) {
-        alert(e.message);
+        showErrorModal('⚠️ Join Failed', e.message || 'Could not join the room. Check the code and try again!');
     }
 }
 
