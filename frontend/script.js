@@ -61,33 +61,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// Cleanup participant on exit/refresh
-window.addEventListener('beforeunload', () => {
-    if (currentUser && !currentUser.is_host && currentRoom) {
-        // Use sendBeacon for reliable delivery on unload
-        const url = `${API_URL}/rooms/${currentRoom.code}/participants/${currentUser.id}`;
-        navigator.sendBeacon(url);
-        // Note: sendBeacon sends a POST by default. If API expects DELETE, we might need a different approach or backend support.
-        // Standard sendBeacon doesn't support DELETE method easily without Blob/headers.
-        // Fallback to fetch with keepalive if sendBeacon isn't flexible enough for the specific API method.
-
-        fetch(url, {
-            method: 'DELETE',
-            keepalive: true
-        }).catch(err => console.error('Cleanup failed', err));
-    }
-});
-
-function saveSession(room, user) {
-    // ONLY save session if the user is the host
-    if (user.is_host) {
-        localStorage.setItem('secret_santa_session', JSON.stringify({
-            roomCode: room.code,
-            user: user
-        }));
-    }
-}
-
 function clearSession() {
     localStorage.removeItem('secret_santa_session');
 }
@@ -254,9 +227,17 @@ function showView(viewId) {
 
     // Clear session if going home
     if (viewId === 'home') {
+        if (currentUser && !currentUser.is_host && currentRoom) {
+            leaveRoom(); // Notify backend
+        }
         clearSession();
         currentUser = null;
         currentRoom = null;
+
+        // Clear URL param
+        const url = new URL(window.location);
+        url.searchParams.delete('room');
+        window.history.pushState({}, '', url);
     }
 
     const target = document.getElementById(`view-${viewId}`);

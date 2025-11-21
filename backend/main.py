@@ -156,6 +156,13 @@ async def join_room(request: JoinRequest):
     if room.is_started:
         raise HTTPException(status_code=400, detail="Game already started")
         
+    # Check if participant with same name already exists
+    existing_participant = next((p for p in room.participants if p.name == request.name), None)
+    if existing_participant:
+        # If exists, return the existing one (idempotent)
+        # We might want to update preferences/secret if they changed, but for now just return existing
+        return existing_participant
+
     new_participant = Participant(
         name=request.name, 
         preferences=request.preferences,
@@ -203,8 +210,8 @@ async def delete_room(room_code: str):
     return {"message": "Room deleted"}
 
 @app.delete("/api/rooms/{room_code}/participants/{participant_id}")
-async def remove_participant(room_code: str, participant_id: str):
-    """Remove a participant from the room (host only, before game starts)."""
+async def remove_participant(room_code: str, participant_id: str, reason: str = "kicked"):
+    """Remove a participant from the room."""
     room_data = await db.db.rooms.find_one({"code": room_code})
     if not room_data:
         raise HTTPException(status_code=404, detail="Room not found")
@@ -231,12 +238,19 @@ async def remove_participant(room_code: str, participant_id: str):
         {"$pull": {"participants": {"id": participant_id}}}
     )
     
+    # Determine message based on reason
+    if reason == "left":
+        message = f"{participant_to_remove.name} left the room."
+    else:
+        message = f"{participant_to_remove.name} was removed from the room by the host."
+
     # Broadcast removal notification via WebSocket
     removal_msg = json.dumps({
         "sender": "System",
-        "message": f"{participant_to_remove.name} was removed from the room by the host.",
+        "message": message,
         "type": "participant_removed",
-        "removed_id": participant_id
+        "removed_id": participant_id,
+        "reason": reason
     })
     await manager.broadcast(removal_msg, room_code)
     
