@@ -202,36 +202,23 @@
 
 <body class="christmas-bg min-h-screen text-white">
     <div id="snow-container"></div>
-
-    <button onclick="showView('home')"
-        class="text-sm text-gray-300 hover:text-white flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-white/10">
-        <i data-lucide="home" class="w-4 h-4"></i> Home
-    </button>
-    </header>
-
-    <!-- Views -->
-
-    <!-- 1. Home View -->
-    <div id="view-home"
-        class="flex-1 flex flex-col items-center justify-center text-center space-y-8 max-w-3xl mx-auto">
-        <div class="space-y-4">
-            <h2 class="text-6xl font-bold text-white drop-shadow-lg">
-                🎄 Share the Joy 🎁
-            </h2>
-            <p class="text-xl text-gray-200">
-                Organize your Secret Santa exchange with festive fun
-            </p>
-        </div>
-        <div class="flex gap-4">
-            <button onclick="showView('create')"
-                class="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg">
-                Create Room
-            </button>
-            <button onclick="showView('join')"
-                class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg">
-                Join Room
-            </button>
-        </div>
+    <h2 class="text-6xl font-bold text-white drop-shadow-lg">
+        🎄 Share the Joy 🎁
+    </h2>
+    <p class="text-xl text-gray-200">
+        Organize your Secret Santa exchange with festive fun
+    </p>
+    </div>
+    <div class="flex gap-4">
+        <button onclick="showView('create')"
+            class="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg">
+            Create Room
+        </button>
+        <button onclick="showView('join')"
+            class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg">
+            Join Room
+        </button>
+    </div>
     </div>
 
     <!-- 2. Create View -->
@@ -298,114 +285,275 @@
                     <label class="block text-sm font-semibold mb-1">Secret Message for your Santa</label>
                     <input type="text" id="join-secret"
                         class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-green-500"
-                        placeholder="Surprise me!">
+                        font-weight: 800; color: #dc2626; text-shadow: 0 0 60px rgba(220, 38, 38, 0.8); animation:
+                        countdown-pulse 1s ease-in-out; } @keyframes countdown-pulse { 0% { transform: scale(0.5);
+                        opacity: 0; } 50% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } } /*
+                        WhatsApp-style chat bubble */ .chat-bubble-sent { background: #dcf8c6; border-radius: 8px 8px 0
+                        8px; } .chat-bubble-received { background: white; border-radius: 8px 8px 8px 0; } /* Poll styles
+                        */ .poll-container { background: white; border-radius: 12px; padding: 12px; margin: 8px 0;
+                        border: 1px solid #e5e7eb; } .poll-option { background: #f3f4f6; border: 2px solid transparent;
+                        border-radius: 8px; padding: 10px; margin: 6px 0; cursor: pointer; transition: all 0.2s;
+                        position: relative; overflow: hidden; } .poll-option:hover { background: #e5e7eb; }
+                        .poll-option.voted { border-color: #16a34a; background: #dcfce7; } .poll-progress { position:
+                        absolute; left: 0; top: 0; bottom: 0; background: rgba(22, 163, 74, 0.1); transition: width
+                        0.3s; } /* Emoji picker */ .emoji-picker { display: grid; grid-template-columns: repeat(8, 1fr);
+                        gap: 8px; max-height: 200px; overflow-y: auto; } .emoji-btn { font-size: 24px; cursor: pointer;
+                        padding: 4px; border-radius: 4px; transition: background 0.2s; } .emoji-btn:hover { background:
+                        rgba(0, 0, 0, 0.05); } /* Custom scrollbar */ ::-webkit-scrollbar { width: 6px; }
+                        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); } ::-webkit-scrollbar-thumb {
+                        background: rgba(220, 38, 38, 0.3); border-radius: 3px; } </style>
+                    <link rel="stylesheet" href="festive.css">
+                    </head>
+
+                    <body class="christmas-bg min-h-screen text-white">
+                        <div id="snow-container"></div>
+                        <h2 class="text-6xl font-bold text-white drop-shadow-lg">
+                            🎄 Share the Joy 🎁
+                        </h2>
+                        <p class="text-xl text-gray-200">
+                            Organize your Secret Santa exchange with festive fun
+                        </p>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="showView('create')"
+                        class="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg">
+                        Create Room
+                    </button>
+                    <button onclick="showView('join')"
+                        class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg">
+                        Join Room
+                    </button>
                 </div>
             </div>
-            <button onclick="joinRoom()"
-                class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold shadow-lg">
-                Join Room
-            </button>
-        </div>
-    </div>
 
-    <!-- 4. Lobby View -->
-    <div id="view-lobby" class="hidden flex flex-col lg:flex-row gap-6 w-full">
-        <!-- Left Column -->
-        <div class="flex-1 space-y-6">
-            class="text-3xl font-mono font-bold tracking-widest cursor-pointer hover:text-red-600"
-            title="Click to copy">
-            <span id="lobby-code">CODE</span>
-        </div>
-    </div>
-    </div>
-    <div class="mt-4 flex gap-3">
-        <button onclick="copyShareableLink()"
-            class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-xl text-sm font-medium flex items-center justify-center gap-2">
-            <i data-lucide="share-2" class="w-4 h-4"></i> Share Link
-        </button>
-        <button id="close-room-btn" onclick="closeRoom()"
-            class="hidden flex-1 bg-red-50 hover:bg-red-100 text-red-600 py-2 rounded-xl text-sm font-medium">
-            Close Room
-        </button>
-    </div>
-    </div>
+            <!-- 2. Create View -->
+            <div id="view-create"
+                class="hidden flex-1 flex flex-col items-center justify-center max-w-md mx-auto w-full">
+                <div class="glass p-8 rounded-3xl w-full space-y-6 text-gray-800">
+                    <h2 class="text-2xl font-bold text-center text-red-600">Create a Room</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Room Name</label>
+                            <input type="text" id="create-room-name"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-red-500"
+                                placeholder="e.g. Family Christmas">
+                        </div>
+                        <div class="border-t border-gray-200 pt-4">
+                            <label class="block text-sm font-semibold mb-1">Your Name</label>
+                            <input type="text" id="create-name"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-red-500"
+                                placeholder="Santa Claus">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Your Preferences / Wishes</label>
+                            <textarea id="create-pref"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-red-500"
+                                rows="2" placeholder="I like books and coffee..."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Secret Message for your Santa</label>
+                            <input type="text" id="create-secret"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-red-500"
+                                placeholder="Ho ho ho!">
+                        </div>
+                    </div>
+                    <button onclick="createRoom()"
+                        class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-semibold shadow-lg">
+                        Create Room
+                    </button>
+                </div>
+            </div>
 
-    <!-- Game Area (Match Reveal) -->
-    <div id="game-area" class="hidden glass p-6 rounded-3xl text-center space-y-6 text-gray-800">
-        <h3 class="text-xl font-bold text-green-700">🎁 You are the Secret Santa for...</h3>
+            <!-- 3. Join View -->
+            <div id="view-join" class="hidden flex-1 flex flex-col items-center justify-center max-w-md mx-auto w-full">
+                <div class="glass p-8 rounded-3xl w-full space-y-6 text-gray-800">
+                    <h2 class="text-2xl font-bold text-center text-green-600">Join a Room</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Room Code</label>
+                            <input type="text" id="join-code"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-green-500 uppercase tracking-widest font-mono"
+                                placeholder="ABCD12">
+                        </div>
+                        <div class="border-t border-gray-200 pt-4">
+                            <label class="block text-sm font-semibold mb-1">Your Name</label>
+                            <input type="text" id="join-name"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-green-500"
+                                placeholder="Elf Buddy">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Your Preferences / Wishes</label>
+                            <textarea id="join-pref"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-green-500"
+                                rows="2" placeholder="I like toys and candy..."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Secret Message for your Santa</label>
+                            <input type="text" id="join-secret"
+                                class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 focus:outline-none focus:border-green-500"
+                                placeholder="Surprise me!">
+                        </div>
+                    </div>
+                    <button onclick="joinRoom()"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold shadow-lg">
+                        Join Room
+                    </button>
+                </div>
+            </div>
 
-        <div id="card-content"
-            class="bg-green-50 p-6 rounded-2xl max-w-md mx-auto border-2 border-green-200 relative overflow-hidden">
-            <!-- Decorative elements -->
-            Message
-        </div>
-    </div>
-    </div>
+            <!-- 4. Lobby View -->
+            <div id="view-lobby"
+                class="hidden flex flex-col lg:flex-row gap-6 w-full max-w-6xl mx-auto h-[calc(100vh-120px)]">
+                <!-- Left Column: Info & Participants -->
+                <div class="w-full lg:w-1/3 flex flex-col gap-4 overflow-y-auto">
+                    <!-- Room Info Card -->
+                    <div class="glass p-6 rounded-3xl text-gray-800 space-y-4">
+                        <div class="text-center">
+                            <h2 id="lobby-room-name" class="text-2xl font-bold text-red-600 mb-2">Room Name</h2>
+                            <div class="text-sm text-gray-500 uppercase tracking-wider font-semibold">Room Code</div>
+                            <div onclick="copyCode()"
+                                class="text-4xl font-mono font-bold tracking-widest cursor-pointer hover:text-red-600 transition-colors my-2"
+                                title="Click to copy">
+                                <span id="lobby-code">CODE</span>
+                            </div>
+                        </div>
 
-    <button onclick="downloadCard()" class="text-sm text-gray-600 hover:text-gray-800 flex items-center gap-2 mx-auto">
-        <i data-lucide="download" class="w-4 h-4"></i> Download Card
-    </button>
-    </div>
+                        <div id="lobby-exchange-date" class="hidden text-center border-t border-gray-200 pt-4">
+                            <div class="text-xs text-gray-500 font-semibold uppercase">Exchange Date</div>
+                            <div id="exchange-date-text" class="text-lg font-medium text-green-700">Dec 25, 2023</div>
+                        </div>
 
-    <!-- Start Area (Host) -->
-    <div class="glass p-6 rounded-3xl text-center space-y-4 text-gray-800">
-        <div id="waiting-msg" class="text-sm text-gray-600">Waiting for host to start...</div>
-        <button id="start-btn" onclick="startGame()"
-            class="hidden w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-semibold shadow-lg transform transition hover:scale-[1.02]">
-            🎅 Start Secret Santa
-        </button>
-    </div>
+                        <div class="flex gap-2 pt-2">
+                            <button onclick="copyShareableLink()"
+                                class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-colors">
+                                <i data-lucide="share-2" class="w-4 h-4"></i> Share
+                            </button>
+                            <button id="close-room-btn" onclick="closeRoom()"
+                                class="hidden flex-1 bg-red-50 hover:bg-red-100 text-red-600 py-2 rounded-xl text-sm font-medium transition-colors">
+                                Close Room
+                            </button>
+                        </div>
+                    </div>
 
-    <!-- Participants List -->
-    <div class="glass p-6 rounded-3xl text-gray-800">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="font-semibold text-gray-800 flex items-center gap-2">
-                <i data-lucide="users" class="w-5 h-5 text-red-500"></i> Participants
-            </h3>
-            <span id="participant-count"
-                class="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-bold">0</span>
-        </div>
-        <div id="participants-list" class="space-y-2 max-h-60 overflow-y-auto pr-2"></div>
-        <button id="toggle-participants-btn" onclick="toggleParticipantsList()"
-            class="hidden w-full mt-3 text-xs text-gray-600 hover:text-gray-800 font-medium">
-            Show All
-        </button>
-        <input type="text" id="chat-input-mobile"
-            class="flex-1 bg-gray-100 border-0 rounded-full px-4 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
-            placeholder="Message">
-        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full">
-            <i data-lucide="send" class="w-4 h-4"></i>
-        </button>
-        </form>
-        <div id="emoji-picker-mobile" class="hidden mt-3 p-3 bg-white rounded-xl border border-gray-200 emoji-picker">
-        </div>
-    </div>
-    <i data-lucide="smile" class="w-5 h-5"></i>
-    </button>
-    <input type="text" id="chat-input"
-        class="flex-1 bg-gray-100 border-0 rounded-full px-4 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
-        placeholder="Message">
-    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full">
-        <i data-lucide="send" class="w-4 h-4"></i>
-    </button>
-    </form>
-    <div id="emoji-picker-desktop" class="hidden mt-3 p-3 bg-white rounded-xl border border-gray-200 emoji-picker">
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
+                    <!-- Host Controls / Game Status -->
+                    <div class="glass p-6 rounded-3xl text-center space-y-4 text-gray-800">
+                        <div id="waiting-msg" class="text-sm text-gray-600 italic">Waiting for host to start...</div>
+                        <button id="start-btn" onclick="startGame()"
+                            class="hidden w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-3 rounded-xl font-bold shadow-lg transform transition hover:scale-[1.02]">
+                            🎅 Start Secret Santa
+                        </button>
 
+                        <!-- Game Area (Match Reveal) -->
+                        <div id="game-area" class="hidden space-y-4">
+                            <h3 class="text-lg font-bold text-green-700">🎁 Your Match</h3>
+                            <div id="card-content"
+                                class="bg-gradient-to-br from-green-50 to-white p-6 rounded-2xl border-2 border-green-200 relative overflow-hidden shadow-sm">
+                                <div class="text-sm text-gray-500 mb-1">You are the Secret Santa for</div>
+                                <div id="match-name" class="text-2xl font-bold text-red-600 mb-3">Name</div>
 
-    <!-- Northern Lights Effect -->
-    <div class="aurora"></div>
+                                <div class="text-left bg-white/50 p-3 rounded-xl mb-2">
+                                    <div class="text-xs font-bold text-gray-500 uppercase mb-1">Likes</div>
+                                    <div id="match-pref" class="text-sm text-gray-800">...</div>
+                                </div>
 
-    <!-- Santa Sleigh Animation -->
-    <div class="santa-sleigh">🛷🎅</div>
+                                <div class="text-left bg-white/50 p-3 rounded-xl">
+                                    <div class="text-xs font-bold text-gray-500 uppercase mb-1">Secret Message</div>
+                                    <div id="match-secret" class="text-sm text-gray-800 italic">...</div>
+                                </div>
+                            </div>
+                            <button onclick="downloadCard()"
+                                class="w-full text-sm text-gray-600 hover:text-gray-900 flex items-center justify-center gap-2 py-2 hover:bg-gray-100 rounded-lg transition-colors">
+                                <i data-lucide="download" class="w-4 h-4"></i> Download Card
+                            </button>
+                        </div>
+                    </div>
 
-    <script src="modal.js"></script>
-    <script src="notifications.js"></script>
-    <script src="script.js"></script>
+                    <!-- Participants List -->
+                    <div class="glass p-6 rounded-3xl text-gray-800 flex-1 flex flex-col min-h-[300px]">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-semibold text-gray-800 flex items-center gap-2">
+                                <i data-lucide="users" class="w-5 h-5 text-red-500"></i> Participants
+                            </h3>
+                            <span id="participant-count"
+                                class="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-bold">0</span>
+                        </div>
+                        <div id="participants-list" class="space-y-2 overflow-y-auto flex-1 pr-2 custom-scrollbar">
+                        </div>
+                        <button id="toggle-participants-btn" onclick="toggleParticipantsList()"
+                            class="hidden w-full mt-3 text-xs text-gray-500 hover:text-gray-800 font-medium transition-colors">
+                            Show All
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column: Chat -->
+                <div
+                    class="w-full lg:w-2/3 glass rounded-3xl flex flex-col overflow-hidden h-[600px] lg:h-auto relative">
+                    <!-- Chat Header -->
+                    <div
+                        class="p-4 border-b border-gray-200 bg-white/50 backdrop-blur-sm flex justify-between items-center">
+                        <div class="font-semibold text-gray-800 flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                            Group Chat
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div id="chat-messages"
+                        class="flex-1 overflow-y-auto p-4 space-y-3 chat-background custom-scrollbar">
+                        <!-- Messages will appear here -->
+                        <div class="text-center text-xs text-gray-400 my-4">Welcome to the chat! 🎄</div>
+                    </div>
+
+                    <!-- Mobile Chat Messages (Hidden on Desktop, handled by CSS/JS if needed, but keeping one main container is better. 
+                 However, script.js references chat-messages-mobile. I will include it but hide it on desktop to satisfy script.js) -->
+                    <div id="chat-messages-mobile"
+                        class="lg:hidden flex-1 overflow-y-auto p-4 space-y-3 chat-background custom-scrollbar hidden">
+                    </div>
+
+                    <!-- Chat Input -->
+                    <div class="p-4 bg-white border-t border-gray-200">
+                        <form onsubmit="sendMessage(event)" class="relative">
+                            <div class="flex gap-2 items-end">
+                                <button type="button" onclick="toggleEmojiPicker('desktop')"
+                                    class="p-3 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition-colors">
+                                    <i data-lucide="smile" class="w-6 h-6"></i>
+                                </button>
+                                <div class="flex-1 relative">
+                                    <input type="text" id="chat-input"
+                                        class="w-full bg-gray-100 border-0 rounded-2xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 placeholder-gray-500"
+                                        placeholder="Type a festive message..." autocomplete="off">
+                                </div>
+                                <button type="submit"
+                                    class="p-3 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md transition-colors">
+                                    <i data-lucide="send" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+
+                            <!-- Emoji Picker -->
+                            <div id="emoji-picker-desktop"
+                                class="hidden absolute bottom-full left-0 mb-2 bg-white p-2 rounded-2xl shadow-xl border border-gray-200 w-64 z-20 emoji-picker">
+                            </div>
+                        </form>
+
+                        <!-- Mobile Input (Hidden on Desktop) -->
+                        <form onsubmit="sendMessage(event)" class="lg:hidden hidden relative mt-2">
+                            <input type="text" id="chat-input-mobile" class="hidden">
+                            <div id="emoji-picker-mobile" class="hidden"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Northern Lights Effect -->
+            <div class="aurora"></div>
+
+            <!-- Santa Sleigh Animation -->
+            <div class="santa-sleigh">🛷🎅</div>
+
+            <script src="modal.js"></script>
+            <script src="notifications.js"></script>
+            <script src="script.js"></script>
 </body>
 
 </html>
