@@ -6,10 +6,19 @@ let pollInterval = null;
 let participantsExpanded = false;
 
 // Emoji list
-const emojis = ['😀', '😂', '😍', '🥰', '😎', '🤩', '😊', '😁', '👍', '👏', '🙌', '🎉', '🎊', '🎁', '🎄', '🎅', '⛄', '❄️', '⭐', '✨', '💝', '❤️', '💚', '🎈', '🔥', '💯', '👌', '✅', '🎯', '🏆'];
+const emojis = [
+    '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '🥲', '🥹', '☺️', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🥸', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🫣', '🤭', '🫢', '🫡', '🤫', '🫠', '🤥', '😶', '🫥', '😐', '😑', '😬', '🙄', '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '😵‍💫', '🫨', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '🤠', '😈', '👿', '👹', '👺', '🤡', '💩', '👻', '💀', '☠️', '👽', '👾', '🤖', '🎃', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾',
+    '👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🫰', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '✍️', '💅', '🤳', '💪', '🦾', '🦵', '🦿', '🦶', '👣', '👂', '🦻', '👃', '🫀', '🫁', '🧠', '🦷', '🦴', '👀', '👁️', '👅', '👄', '💋', '🩸',
+    '🎅', '🤶', '🧑‍🎄', '🧚', '🧚‍♂️', '🧚‍♀️', '🧞', '🧞‍♂️', '🧞‍♀️', '🧛', '🧛‍♂️', '🧛‍♀️', '🧜', '🧜‍♂️', '🧜‍♀️', '🧝', '🧝‍♂️', '🧝‍♀️', '🧟', '🧟‍♂️', '🧟‍♀️', '🧙', '🧙‍♂️', '🧙‍♀️',
+    '🎄', '🎁', '🎀', '🎊', '🎉', '🕯️', '🔔', '🔕', '🎼', '🎵', '🎶', '🌟', '⭐️', '✨', '⚡️', '☄️', '💥', '🔥', '🌪️', '🌈', '☀️', '🌤️', '⛅️', '🌥️', '☁️', '🌦️', '🌧️', '⛈️', '🌩️', '🌨️', '❄️', '☃️', '⛄️', '🌬️', '💨', '💧', '💦', '🫧', '☔️', '☂️', '🌊',
+    '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❤️‍🔥', '❤️‍🩹', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈️', '♉️', '♊️', '♋️', '♌️', '♍️', '♎️', '♏️', '♐️', '♑️', '♒️', '♓️', '🆔', '⚛️',
+    '💯', '💢', '💥', '💫', '💦', '💨', '🕳️', '💣', '💬', '👁️‍🗨️', '🗨️', '🗯️', '💭', '💤'
+];
 
 // Icons
 lucide.createIcons();
+
+// ... (rest of file)
 
 // URL Parameter Detection - Auto-join from shareable link
 // URL Parameter Detection - Auto-join from shareable link & Session Restoration
@@ -61,6 +70,16 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+function saveSession(room, user) {
+    // ONLY save session if the user is the host
+    if (user.is_host) {
+        localStorage.setItem('secret_santa_session', JSON.stringify({
+            roomCode: room.code,
+            user: user
+        }));
+    }
+}
+
 function clearSession() {
     localStorage.removeItem('secret_santa_session');
 }
@@ -102,95 +121,7 @@ async function showCountdown() {
     overlay.classList.add('hidden');
 }
 
-// Poll Functions
-function openPollModal() {
-    document.getElementById('poll-modal').classList.remove('hidden');
-}
-
-function closePollModal() {
-    document.getElementById('poll-modal').classList.add('hidden');
-    document.getElementById('poll-question').value = '';
-    const container = document.getElementById('poll-options-container');
-    container.innerHTML = `
-        <input type="text" class="poll-option-input w-full bg-white border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:border-red-500" placeholder="Option 1">
-        <input type="text" class="poll-option-input w-full bg-white border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:border-red-500" placeholder="Option 2">
-    `;
-}
-
-function addPollOption() {
-    const container = document.getElementById('poll-options-container');
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.className = 'poll-option-input w-full bg-white border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:border-red-500';
-    input.placeholder = `Option ${container.children.length + 1}`;
-    container.appendChild(input);
-}
-
-async function submitPoll() {
-    const question = document.getElementById('poll-question').value.trim();
-    const optionInputs = document.querySelectorAll('.poll-option-input');
-    const options = Array.from(optionInputs)
-        .map(input => input.value.trim())
-        .filter(val => val);
-
-    if (!question || options.length < 2) {
-        alert('Please enter a question and at least 2 options');
-        return;
-    }
-
-    try {
-        await apiCall(`/rooms/${currentRoom.code}/polls`, 'POST', {
-            question,
-            options,
-            creator_name: currentUser.name
-        });
-        closePollModal();
-    } catch (e) {
-        alert('Failed to create poll: ' + e.message);
-    }
-}
-
-async function votePoll(pollId, option) {
-    try {
-        await apiCall(`/rooms/${currentRoom.code}/polls/${pollId}/vote`, 'POST', {
-            option,
-            voter_id: currentUser.id
-        });
-    } catch (e) {
-        alert('Failed to vote: ' + e.message);
-    }
-}
-
-function renderPoll(poll) {
-    const totalVotes = Object.keys(poll.votes).length;
-    const voteCounts = {};
-    poll.options.forEach(opt => voteCounts[opt] = 0);
-    Object.values(poll.votes).forEach(opt => voteCounts[opt]++);
-
-    const userVote = poll.votes[currentUser.id];
-
-    return `
-        <div class="poll-container">
-            <div class="font-semibold text-gray-800 mb-2">📊 ${poll.question}</div>
-            <div class="text-xs text-gray-500 mb-3">by ${poll.created_by}</div>
-            ${poll.options.map(option => {
-        const votes = voteCounts[option];
-        const percentage = totalVotes > 0 ? (votes / totalVotes * 100) : 0;
-        const isVoted = userVote === option;
-        return `
-                    <div class="poll-option ${isVoted ? 'voted' : ''}" onclick="${userVote ? '' : `votePoll('${poll.id}', '${option}')`}">
-                        <div class="poll-progress" style="width: ${percentage}%"></div>
-                        <div class="relative z-10 flex justify-between items-center">
-                            <span class="font-medium text-gray-800">${option}</span>
-                            <span class="text-sm text-gray-600">${votes} ${votes === 1 ? 'vote' : 'votes'}</span>
-                        </div>
-                    </div>
-                `;
-    }).join('')}
-            <div class="text-xs text-gray-500 mt-2">${totalVotes} total ${totalVotes === 1 ? 'vote' : 'votes'}</div>
-        </div>
-    `;
-}
+// Poll functions removed
 
 // Emoji Picker
 function toggleEmojiPicker(type) {
@@ -330,23 +261,26 @@ function toggleParticipantsList() {
     updateParticipantsList(currentRoom.participants);
 }
 
-async function removeParticipant(participantId) {
+function removeParticipant(participantId) {
     if (!currentRoom || !currentUser.is_host) return;
-    if (!confirm("Are you sure you want to remove this participant?")) return;
 
-    try {
-        await apiCall(`/rooms/${currentRoom.code}/participants/${participantId}`, 'DELETE');
-        await pollRoomState();
-        if (typeof showNotification !== 'undefined') {
-            showNotification("Participant removed successfully", "success");
-        }
-    } catch (e) {
-        if (typeof showNotification !== 'undefined') {
-            showNotification("Failed to remove participant: " + e.message, "error");
-        } else {
-            alert("Failed to remove participant: " + e.message);
-        }
-    }
+    showConfirmModal(
+        'Remove Participant?',
+        'Are you sure you want to remove this participant?',
+        async () => {
+            try {
+                await apiCall(`/rooms/${currentRoom.code}/participants/${participantId}`, 'DELETE');
+                await pollRoomState();
+                if (typeof showNotification !== 'undefined') {
+                    showNotification("Participant removed successfully", "success");
+                }
+            } catch (e) {
+                showErrorModal('Removal Failed', "Failed to remove participant: " + e.message);
+            }
+        },
+        null,
+        { confirmText: 'Remove', isDestructive: true }
+    );
 }
 
 function updateGameState(participants, isStarted) {
@@ -669,22 +603,30 @@ async function startGame() {
         const res = await apiCall(`/rooms/${currentRoom.code}/start`, 'POST');
         updateGameState(res.participants, true);
     } catch (e) {
-        alert(e.message);
+        showErrorModal('Start Failed', e.message);
     }
 }
 
-async function closeRoom() {
+function closeRoom() {
     if (!currentRoom || !currentUser.is_host) return;
-    if (!confirm("Are you sure you want to close this room? This will delete all data permanently.")) return;
 
-    try {
-        await apiCall(`/rooms/${currentRoom.code}`, 'DELETE');
-        alert("Room closed and data deleted.");
-        clearSession();
-        window.location.reload();
-    } catch (e) {
-        alert("Failed to close room: " + e.message);
-    }
+    showConfirmModal(
+        '🚫 Close Room?',
+        'Are you sure you want to close this room? This will delete all data permanently.',
+        async () => {
+            try {
+                await apiCall(`/rooms/${currentRoom.code}`, 'DELETE');
+                showSuccessModal('Room Closed', 'Room closed and data deleted.', () => {
+                    clearSession();
+                    window.location.reload();
+                });
+            } catch (e) {
+                showErrorModal('Failed to Close', "Failed to close room: " + e.message);
+            }
+        },
+        null,
+        { confirmText: 'Close Room', isDestructive: true }
+    );
 }
 
 // Utilities

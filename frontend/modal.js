@@ -12,7 +12,8 @@ function showModal(options) {
         onCancel = null,
         onClose = null,
         autoClose = false,
-        autoCloseDelay = 3000
+        autoCloseDelay = 3000,
+        isDestructive = false
     } = options;
 
     // Remove any existing modals
@@ -38,6 +39,9 @@ function showModal(options) {
 
     const icon = icons[type] || '🎄';
 
+    // Determine button class
+    const confirmBtnClass = isDestructive ? 'festive-btn-primary' : 'festive-btn-confirm';
+
     // Build modal content
     modal.innerHTML = `
         <div class="festive-modal-header">
@@ -50,7 +54,7 @@ function showModal(options) {
         <div class="festive-modal-footer">
             ${type === 'confirm'
             ? `<button class="festive-btn festive-btn-cancel" id="modal-cancel">${cancelText}</button>
-                   <button class="festive-btn festive-btn-confirm" id="modal-confirm">${confirmText}</button>`
+                   <button class="festive-btn ${confirmBtnClass}" id="modal-confirm">${confirmText}</button>`
             : `<button class="festive-btn festive-btn-primary" id="modal-ok">${confirmText}</button>`
         }
         </div>
@@ -148,13 +152,14 @@ function showInfoModal(title, message, onClose) {
     });
 }
 
-function showConfirmModal(title, message, onConfirm, onCancel) {
+function showConfirmModal(title, message, onConfirm, onCancel, options = {}) {
     showModal({
         type: 'confirm',
         title: title || '🤔 Confirm',
         message,
-        confirmText: 'Yes',
-        cancelText: 'No',
+        confirmText: options.confirmText || 'Yes',
+        cancelText: options.cancelText || 'No',
+        isDestructive: options.isDestructive || false,
         onConfirm,
         onCancel
     });
