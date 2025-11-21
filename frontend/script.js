@@ -13,6 +13,7 @@ lucide.createIcons();
 
 // URL Parameter Detection - Auto-join from shareable link
 // URL Parameter Detection - Auto-join from shareable link & Session Restoration
+// URL Parameter Detection - Auto-join from shareable link & Session Restoration
 window.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const roomCode = urlParams.get('room');
@@ -20,19 +21,28 @@ window.addEventListener('DOMContentLoaded', async () => {
     // Check for existing session
     const session = localStorage.getItem('secret_santa_session');
 
-    if (session && !roomCode) {
+    if (session) {
         try {
             const { roomCode: savedCode, user } = JSON.parse(session);
-            // Verify session is still valid
-            const room = await apiCall(`/rooms/${savedCode}`);
-            const participant = room.participants.find(p => p.id === user.id);
 
-            if (participant) {
-                currentUser = participant;
-                currentRoom = room;
-                enterLobby();
-                return; // Skip auto-join if session restored
+            // Only restore if it's a host session
+            if (user && user.is_host) {
+                // Verify session is still valid
+                const room = await apiCall(`/rooms/${savedCode}`);
+                // Check if this user is still the host
+                const host = room.participants.find(p => p.id === user.id && p.is_host);
+
+                if (host) {
+                    currentUser = host;
+                    currentRoom = room;
+                    enterLobby();
+                    return; // Skip auto-join if session restored
+                } else {
+                    // Session invalid (room gone or not host anymore)
+                    localStorage.removeItem('secret_santa_session');
+                }
             } else {
+                // If we have a session but it's not a host (shouldn't happen with new logic, but for cleanup)
                 localStorage.removeItem('secret_santa_session');
             }
         } catch (e) {
@@ -51,11 +61,31 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+// Cleanup participant on exit/refresh
+window.addEventListener('beforeunload', () => {
+    if (currentUser && !currentUser.is_host && currentRoom) {
+        // Use sendBeacon for reliable delivery on unload
+        const url = `${API_URL}/rooms/${currentRoom.code}/participants/${currentUser.id}`;
+        navigator.sendBeacon(url);
+        // Note: sendBeacon sends a POST by default. If API expects DELETE, we might need a different approach or backend support.
+        // Standard sendBeacon doesn't support DELETE method easily without Blob/headers.
+        // Fallback to fetch with keepalive if sendBeacon isn't flexible enough for the specific API method.
+
+        fetch(url, {
+            method: 'DELETE',
+            keepalive: true
+        }).catch(err => console.error('Cleanup failed', err));
+    }
+});
+
 function saveSession(room, user) {
-    localStorage.setItem('secret_santa_session', JSON.stringify({
-        roomCode: room.code,
-        user: user
-    }));
+    // ONLY save session if the user is the host
+    if (user.is_host) {
+        localStorage.setItem('secret_santa_session', JSON.stringify({
+            roomCode: room.code,
+            user: user
+        }));
+    }
 }
 
 function clearSession() {
@@ -556,6 +586,28 @@ function enterLobby() {
 
 // Actions
 async function createRoom() {
+    // Check if already hosting a room in session
+    const session = localStorage.getItem('secret_santa_session');
+    if (session) {
+        const { roomCode, user } = JSON.parse(session);
+        if (user.is_host) {
+            if (confirm("You are already hosting a room. Do you want to rejoin it?")) {
+                try {
+                    const room = await apiCall(`/rooms/${roomCode}`);
+                    currentUser = user;
+                    currentRoom = room;
+                    enterLobby();
+                    return;
+                } catch (e) {
+                    // Session invalid, continue to create
+                    clearSession();
+                }
+            } else {
+                clearSession();
+            }
+        }
+    }
+
     const roomNameInput = document.getElementById('create-room-name');
     const nameInput = document.getElementById('create-name');
     const prefInput = document.getElementById('create-pref');
@@ -579,6 +631,12 @@ async function createRoom() {
         currentRoom = room;
         saveSession(room, currentUser);
         enterLobby();
+
+        // Update URL to include room code
+        const url = new URL(window.location);
+        url.searchParams.set('room', room.code);
+        window.history.pushState({}, '', url);
+
     } catch (e) {
         showErrorModal('⚠️ Creation Failed', e.message || 'Could not create the room. Please try again.');
     }
@@ -606,8 +664,18 @@ async function joinRoom() {
         });
         currentUser = participant;
         currentRoom = await apiCall(`/rooms/${code}`);
+
+        // saveSession will only save if currentUser.is_host is true (which it shouldn't be for joiners, usually)
+        // But if we allow re-joining as host via this flow (unlikely), it handles it.
         saveSession(currentRoom, currentUser);
+
         enterLobby();
+
+        // Update URL
+        const url = new URL(window.location);
+        url.searchParams.set('room', code);
+        window.history.pushState({}, '', url);
+
     } catch (e) {
         showErrorModal('⚠️ Join Failed', e.message || 'Could not join the room. Check the code and try again!');
     }
