@@ -11,36 +11,54 @@ const emojis = ['😀', '😂', '😍', '🥰', '😎', '🤩', '😊', '😁', 
 // Icons
 lucide.createIcons();
 
-// URL Parameter Detection - Auto-join from shareable link
 // URL Parameter Detection - Auto-join from shareable link & Session Restoration
 window.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const roomCode = urlParams.get('room');
 
-    // Check for existing session
+    // Check for existing session FIRST (regardless of URL parameters)
     const session = localStorage.getItem('secret_santa_session');
 
-    if (session && !roomCode) {
+    if (session) {
         try {
             const { roomCode: savedCode, user } = JSON.parse(session);
-            // Verify session is still valid
-            const room = await apiCall(`/rooms/${savedCode}`);
-            const participant = room.participants.find(p => p.id === user.id);
 
-            if (participant) {
-                currentUser = participant;
-                currentRoom = room;
-                enterLobby();
-                return; // Skip auto-join if session restored
-            } else {
+            // If URL has a room code and it's DIFFERENT from saved session, clear old session
+            if (roomCode && roomCode.toUpperCase() !== savedCode.toUpperCase()) {
+                console.log("Different room in URL, clearing old session");
                 localStorage.removeItem('secret_santa_session');
+                // Continue to auto-join logic below
+            } else {
+                // Try to restore the existing session
+                const room = await apiCall(`/rooms/${savedCode}`);
+                const participant = room.participants.find(p => p.id === user.id);
+
+                if (participant) {
+                    currentUser = participant;
+                    currentRoom = room;
+
+                    // Update URL to match session if not already present
+                    if (!roomCode || roomCode.toUpperCase() !== savedCode.toUpperCase()) {
+                        const newUrl = `${window.location.origin}/?room=${savedCode}`;
+                        window.history.replaceState({ roomCode: savedCode }, '', newUrl);
+                    }
+
+                    enterLobby();
+                    return; // Session restored successfully
+                } else {
+                    // Participant no longer exists in room
+                    console.log("Participant not found in room");
+                    localStorage.removeItem('secret_santa_session');
+                }
             }
         } catch (e) {
-            console.log("Session invalid or expired");
+            console.log("Session invalid or expired:", e.message);
             localStorage.removeItem('secret_santa_session');
         }
     }
 
+    // If we reach here, no valid session exists
+    // Handle URL parameter for auto-join
     if (roomCode) {
         // Auto-fill room code and show join view
         const joinCodeInput = document.getElementById('join-code');
@@ -248,7 +266,7 @@ function showView(viewId) {
 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
 const API_BASE = isLocal
     ? 'http://localhost:8080'
-    : 'https://test-5qw6.onrender.com/'; // REPLACE THIS WITH YOUR ACTUAL RENDER BACKEND URL
+    : 'https://test-5qw6.onrender.com'; // REPLACE THIS WITH YOUR ACTUAL RENDER BACKEND URL
 
 const API_URL = `${API_BASE}/api`;
 
