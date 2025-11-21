@@ -557,13 +557,11 @@ function enterLobby() {
 // Actions
 async function createRoom() {
     const roomNameInput = document.getElementById('create-room-name');
-    const exchangeDateInput = document.getElementById('create-exchange-date');
     const nameInput = document.getElementById('create-name');
     const prefInput = document.getElementById('create-pref');
     const secretInput = document.getElementById('create-secret');
 
     const roomName = roomNameInput.value.trim();
-    const exchangeDate = exchangeDateInput.value;
     const name = nameInput.value.trim();
     const pref = prefInput.value.trim();
     const secret = secretInput.value.trim();
@@ -573,7 +571,6 @@ async function createRoom() {
     try {
         const room = await apiCall('/rooms', 'POST', {
             room_name: roomName,
-            exchange_date: exchangeDate || null,
             host_name: name,
             host_preferences: pref,
             host_secret_message: secret
@@ -618,9 +615,6 @@ async function joinRoom() {
 
 async function startGame() {
     if (!currentRoom || !currentUser.is_host) return;
-
-    // Show countdown
-    await showCountdown();
 
     try {
         const res = await apiCall(`/rooms/${currentRoom.code}/start`, 'POST');
