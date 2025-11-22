@@ -1,0 +1,252 @@
+/* ===== FESTIVE ENHANCEMENTS FOR SECRET SANTA ===== */
+
+/* Northern Lights Effect */
+.aurora {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to bottom,
+            rgba(0, 255, 170, 0.15) 0%,
+            rgba(100, 200, 255, 0.1) 40%,
+            transparent 100%);
+    opacity: 0.6;
+    z-index: 1;
+    pointer-events: none;
+    animation: aurora-wave 20s ease-in-out infinite;
+}
+
+@keyframes aurora-wave {
+
+    0%,
+    100% {
+        transform: translateY(-10%) scaleY(1);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: translateY(5%) scaleY(1.1);
+        opacity: 0.8;
+    }
+}
+
+/* Santa Sleigh Animation */
+.santa-sleigh {
+    position: fixed;
+    font-size: 48px;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0;
+    animation: sleigh-fly 30s ease-in-out infinite;
+}
+
+@keyframes sleigh-fly {
+    0% {
+        left: -10%;
+        top: 15%;
+        opacity: 0;
+        transform: scale(0.5) rotate(-15deg);
+    }
+
+    5% {
+        opacity: 1;
+    }
+
+    25% {
+        left: 50%;
+        top: 10%;
+        transform: scale(1) rotate(0deg);
+    }
+
+    45% {
+        opacity: 1;
+    }
+
+    50% {
+        left: 110%;
+        top: 8%;
+        opacity: 0;
+        transform: scale(0.5) rotate(15deg);
+    }
+
+    100% {
+        left: 110%;
+        top: 8%;
+        opacity: 0;
+    }
+}
+
+/* Twinkling Stars */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(2px 2px at 20% 30%, white, transparent),
+        radial-gradient(2px 2px at 60% 70%, white, transparent),
+        radial-gradient(1px 1px at 50% 50%, white, transparent),
+        radial-gradient(1px 1px at 80% 10%, white, transparent),
+        radial-gradient(2px 2px at 90% 60%, white, transparent),
+        radial-gradient(1px 1px at 33% 80%, white, transparent),
+        radial-gradient(2px 2px at 70% 40%, white, transparent);
+    background-size: 200% 200%;
+    background-position: 0% 0%;
+    animation: twinkle 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        background-position: 0% 0%;
+    }
+
+    50% {
+        opacity: 0.6;
+        background-position: 100% 100%;
+    }
+}
+
+/* Enhanced Glass Cards */
+.glass {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.glass:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.2),
+        0 0 20px rgba(220, 38, 38, 0.1);
+}
+
+/* Christmas Lights Border for Cards */
+.glass::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(90deg,
+            #dc2626 0%,
+            #16a34a 33%,
+            #eab308 66%,
+            #dc2626 100%);
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0.3;
+    animation: lights-rotate 4s linear infinite;
+}
+
+@keyframes lights-rotate {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+/* Snowflake Decorations on Cards */
+.glass::before {
+    content: '❄️';
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 24px;
+    opacity: 0.15;
+    animation: snowflake-float 3s ease-in-out infinite;
+}
+
+@keyframes snowflake-float {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-10px) rotate(180deg);
+    }
+}
+
+/* Button Enhancements */
+button {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+button:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Primary Buttons Glow */
+.bg-red-600,
+.bg-green-600 {
+    animation: button-glow 2s ease-in-out infinite;
+}
+
+@keyframes button-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 4px 20px rgba(220, 38, 38, 0.6),
+            0 0 30px rgba(220, 38, 38, 0.3);
+    }
+}
+
+.bg-green-600 {
+    animation-name: button-glow-green;
+}
+
+@keyframes button-glow-green {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 4px 20px rgba(22, 163, 74, 0.6),
+            0 0 30px rgba(22, 163, 74, 0.3);
+    }
+}
+
+/* Chat Background */
+.chat-background {
+    background-color: #e5ddd5;
+    background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414 0c5.91 0 10.707-4.798 10.707-10.707 0-5.91-4.797-10.707-10.707-10.707-5.91 0-10.707 4.797-10.707 10.707 0 5.91 4.797 10.707 10.707 10.707zM40 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.66 29.66l-2.043-6.819-6.82 2.042 2.042 6.82 6.82-2.043zM6.48 32.84l2.043 6.82-6.82 2.04-2.043-6.818 6.82-2.042zM16 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm16 0c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm16 0c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm16 0c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM16 64c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm16 0c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm16 0c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm16 0c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6z' fill='%239c9289' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
