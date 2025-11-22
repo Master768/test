@@ -456,20 +456,34 @@ function sendMessage(e) {
 
 // Lobby Logic
 function enterLobby() {
+    // Show lobby view
+    showView('lobby');
+
+    // Display room info
+    const lobbyRoomName = document.getElementById('lobby-room-name');
+    const lobbyCode = document.getElementById('lobby-code');
+    if (lobbyRoomName) lobbyRoomName.innerText = currentRoom.name || 'Secret Santa Room';
+    if (lobbyCode) lobbyCode.innerText = currentRoom.code;
+
+    // Show/hide buttons based on host status
     const startBtn = document.getElementById('start-btn');
     const closeBtn = document.getElementById('close-room-btn');
     const waitMsg = document.getElementById('waiting-msg');
     const pollBtnDesktop = document.getElementById('create-poll-btn-desktop');
     const pollBtnMobile = document.getElementById('create-poll-btn-mobile');
 
-    if (startBtn) startBtn.classList.remove('hidden');
-    if (closeBtn) closeBtn.classList.remove('hidden');
-    if (waitMsg) waitMsg.classList.add('hidden');
+    if (currentUser.is_host) {
+        if (startBtn) startBtn.classList.remove('hidden');
+        if (closeBtn) closeBtn.classList.remove('hidden');
+        if (waitMsg) waitMsg.classList.add('hidden');
+    } else {
+        if (startBtn) startBtn.classList.add('hidden');
+        if (closeBtn) closeBtn.classList.add('hidden');
+        if (waitMsg) waitMsg.classList.remove('hidden');
+    }
+
     if (pollBtnDesktop) pollBtnDesktop.classList.remove('hidden');
     if (pollBtnMobile) pollBtnMobile.classList.remove('hidden');
-
-    // Show lobby view
-    showView('lobby');
 
     // Initial Update
     participantsExpanded = false;
