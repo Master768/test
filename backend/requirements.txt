@@ -1,8 +1,0 @@
-fastapi
-uvicorn[standard]
-motor
-pymongo[srv]
-pydantic
-python-dotenv
-python-multipart
-websockets
