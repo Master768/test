@@ -467,24 +467,26 @@ function enterLobby() {
     if (waitMsg) waitMsg.classList.add('hidden');
     if (pollBtnDesktop) pollBtnDesktop.classList.remove('hidden');
     if (pollBtnMobile) pollBtnMobile.classList.remove('hidden');
-}
 
-// Initial Update
-participantsExpanded = false;
-updateParticipantsList(currentRoom.participants);
-updateGameState(currentRoom.participants, currentRoom.is_started);
+    // Show lobby view
+    showView('lobby');
 
-// Render existing polls
-if (currentRoom.polls && currentRoom.polls.length > 0) {
-    currentRoom.polls.forEach(poll => addPollToChat(poll));
-}
+    // Initial Update
+    participantsExpanded = false;
+    updateParticipantsList(currentRoom.participants);
+    updateGameState(currentRoom.participants, currentRoom.is_started);
 
-// Connect Chat
-connectWebSocket();
+    // Render existing polls
+    if (currentRoom.polls && currentRoom.polls.length > 0) {
+        currentRoom.polls.forEach(poll => addPollToChat(poll));
+    }
 
-// Start Polling
-if (pollInterval) clearInterval(pollInterval);
-pollInterval = setInterval(pollRoomState, 3000);
+    // Connect Chat
+    connectWebSocket();
+
+    // Start Polling
+    if (pollInterval) clearInterval(pollInterval);
+    pollInterval = setInterval(pollRoomState, 3000);
 }
 
 // Actions
