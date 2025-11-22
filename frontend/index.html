@@ -123,45 +123,6 @@
             border-radius: 8px 8px 8px 0;
         }
 
-        /* Poll styles */
-        .poll-container {
-            background: white;
-            border-radius: 12px;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid #e5e7eb;
-        }
-
-        .poll-option {
-            background: #f3f4f6;
-            border: 2px solid transparent;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 6px 0;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .poll-option:hover {
-            background: #e5e7eb;
-        }
-
-        .poll-option.voted {
-            border-color: #16a34a;
-            background: #dcfce7;
-        }
-
-        .poll-progress {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            background: rgba(22, 163, 74, 0.1);
-            transition: width 0.3s;
-        }
-
         /* Emoji picker */
         .emoji-picker {
             display: grid;
@@ -196,48 +157,335 @@
             background: rgba(220, 38, 38, 0.3);
             border-radius: 3px;
         }
+
+        /* Festive Card Gradient */
+        .festive-card {
+            background: linear-gradient(135deg, rgba(255, 192, 203, 0.9), rgba(255, 255, 255, 0.8), rgba(144, 238, 144, 0.9), rgba(255, 192, 203, 0.9));
+            background-size: 300% 300%;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: gradient-shift 8s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .festive-input {
+            background: white;
+            border: none;
+            border-radius: 16px;
+            padding: 12px 16px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .festive-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .running-santa {
+            position: absolute;
+            top: -60px;
+            left: -100px;
+            font-size: 2.5rem;
+            z-index: 20;
+            animation: run-across 15s linear infinite;
+        }
+
+        @keyframes run-across {
+            0% {
+                left: -150px;
+                transform: scaleX(1);
+            }
+
+            45% {
+                transform: scaleX(1) rotate(5deg);
+            }
+
+            50% {
+                left: 110%;
+                transform: scaleX(1) rotate(0deg);
+            }
+
+            50.01% {
+                transform: scaleX(-1);
+            }
+
+            100% {
+                left: 110%;
+            }
+        }
+
+        /* ===== FESTIVE ENHANCEMENTS FOR SECRET SANTA ===== */
+
+        /* Northern Lights Effect */
+        .aurora {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom,
+                    rgba(0, 255, 170, 0.15) 0%,
+                    rgba(100, 200, 255, 0.1) 40%,
+                    transparent 100%);
+            opacity: 0.6;
+            z-index: 1;
+            pointer-events: none;
+            animation: aurora-wave 20s ease-in-out infinite;
+        }
+
+        @keyframes aurora-wave {
+
+            0%,
+            100% {
+                transform: translateY(-10%) scaleY(1);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: translateY(5%) scaleY(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        /* Santa Sleigh Animation */
+        .santa-sleigh {
+            position: fixed;
+            font-size: 48px;
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0;
+            animation: sleigh-fly 30s ease-in-out infinite;
+        }
+
+        @keyframes sleigh-fly {
+            0% {
+                left: -10%;
+                top: 15%;
+                opacity: 0;
+                transform: scale(0.5) rotate(-15deg);
+            }
+
+            5% {
+                opacity: 1;
+            }
+
+            25% {
+                left: 50%;
+                top: 10%;
+                transform: scale(1) rotate(0deg);
+            }
+
+            45% {
+                opacity: 1;
+            }
+
+            50% {
+                left: 110%;
+                top: 8%;
+                opacity: 0;
+                transform: scale(0.5) rotate(15deg);
+            }
+
+            100% {
+                left: 110%;
+                top: 8%;
+                opacity: 0;
+            }
+        }
+
+        /* Twinkling Stars */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(2px 2px at 20% 30%, white, transparent),
+                radial-gradient(2px 2px at 60% 70%, white, transparent),
+                radial-gradient(1px 1px at 50% 50%, white, transparent),
+                radial-gradient(1px 1px at 80% 10%, white, transparent),
+                radial-gradient(2px 2px at 90% 60%, white, transparent),
+                radial-gradient(1px 1px at 33% 80%, white, transparent),
+                radial-gradient(2px 2px at 70% 40%, white, transparent);
+            background-size: 200% 200%;
+            background-position: 0% 0%;
+            animation: twinkle 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.4;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                background-position: 0% 0%;
+            }
+
+            50% {
+                opacity: 0.6;
+                background-position: 100% 100%;
+            }
+        }
+
+        /* Enhanced Glass Cards */
+        .glass {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .glass:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.2), 0 0 20px rgba(220, 38, 38, 0.1);
+        }
+
+        /* Christmas Lights Border for Cards */
+        .glass::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(90deg, #dc2626 0%, #16a34a 33%, #eab308 66%, #dc2626 100%);
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0.3;
+            animation: lights-rotate 4s linear infinite;
+        }
+
+        @keyframes lights-rotate {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        /* Snowflake Decorations on Cards */
+        .glass::before {
+            content: '❄️';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 24px;
+            opacity: 0.15;
+            animation: snowflake-float 3s ease-in-out infinite;
+        }
+
+        @keyframes snowflake-float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(180deg);
+            }
+        }
+
+        /* Button Enhancements */
+        button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Primary Buttons Glow */
+        .bg-red-600,
+        .bg-green-600 {
+            animation: button-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes button-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 4px 20px rgba(220, 38, 38, 0.6), 0 0 30px rgba(220, 38, 38, 0.3);
+            }
+        }
+
+        .bg-green-600 {
+            animation-name: button-glow-green;
+        }
+
+        @keyframes button-glow-green {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 4px 20px rgba(22, 163, 74, 0.6), 0 0 30px rgba(22, 163, 74, 0.3);
+            }
+        }
+
+        /* Chat Background */
+        .chat-background {
+            background-color: #e5ddd5;
+            background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414 0c5.91 0 10.707-4.798 10.707-10.707 0-5.91-4.797-10.707-10.707-10.707-5.91 0-10.707 4.797-10.707 10.707 0 5.91 4.797 10.707 10.707 10.707zM40 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.66 29.66l-2.043-6.819-6.82 2.042 2.042 6.82 6.82-2.043zM6.48 32.84l2.043 6.82-6.82 2.04-2.043-6.818 6.82-2.042zM16 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm16 0c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm16 0c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm16 0c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM16 64c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm16 0c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm16 0c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm16 0c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6z' fill='%239c9289' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
     </style>
 </head>
 
 <body class="christmas-bg min-h-screen text-white">
     <div id="snow-container"></div>
+    <div class="aurora"></div>
+    <div class="santa-sleigh">🎅 🛷</div>
 
     <!-- Countdown Overlay -->
     <div id="countdown-overlay" class="countdown-overlay hidden">
         <div id="countdown-number" class="countdown-number"></div>
-    </div>
-
-    <!-- Poll Creation Modal -->
-    <div id="poll-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-        <div class="glass max-w-md w-full rounded-3xl p-6 space-y-4 text-gray-800">
-            <h3 class="text-xl font-bold text-red-700">Create Poll</h3>
-            <div>
-                <label class="block text-sm font-semibold mb-2">Question</label>
-                <input type="text" id="poll-question"
-                    class="w-full bg-white border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:border-red-500"
-                    placeholder="What should we do?">
-            </div>
-            <div>
-                <label class="block text-sm font-semibold mb-2">Options</label>
-                <div id="poll-options-container" class="space-y-2">
-                    <input type="text"
-                        class="poll-option-input w-full bg-white border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:border-red-500"
-                        placeholder="Option 1">
-                    <input type="text"
-                        class="poll-option-input w-full bg-white border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:border-red-500"
-                        placeholder="Option 2">
-                </div>
-                <button onclick="addPollOption()" class="mt-2 text-sm text-green-600 hover:text-green-700">+ Add
-                    Option</button>
-            </div>
-            <div class="flex gap-3">
-                <button onclick="closePollModal()"
-                    class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded-xl font-semibold">Cancel</button>
-                <button onclick="submitPoll()"
-                    class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-xl font-semibold">Create
-                    Poll</button>
-            </div>
-        </div>
     </div>
 
     <!-- App Container -->
@@ -280,94 +528,247 @@
             </div>
         </div>
 
-        <!-- Start Area -->
-        <div class="glass p-6 rounded-3xl text-center space-y-4 text-gray-800 order-3">
-            <div id="waiting-msg" class="text-sm text-gray-600">Waiting for host to start...</div>
-            <button id="start-btn" onclick="startGame()"
-                class="hidden w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-semibold">
-                🎅 Start Secret Santa
-            </button>
-        </div>
+        <!-- 2. Create Room View -->
+        <div id="view-create" class="hidden flex-1 flex items-center justify-center relative">
+            <!-- Decorative Icons -->
+            <div class="running-santa">🛷 🎅</div>
 
-        <!-- Chat (Mobile) -->
-        <div class="lg:hidden glass rounded-3xl flex flex-col h-96 order-4">
             <div
-                class="p-4 border-b border-gray-200 text-sm font-semibold text-gray-800 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <i data-lucide="message-circle" class="w-4 h-4 text-green-600"></i> Chat
+                class="festive-card max-w-md w-full rounded-[32px] p-8 space-y-6 text-gray-800 relative overflow-hidden">
+                <!-- Inner Snowflake -->
+                <div class="absolute top-4 right-4 text-white/40 text-4xl">❄️</div>
+
+                <h2 class="text-3xl font-bold text-red-600 text-center drop-shadow-sm">Create a Room</h2>
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2 text-gray-700">Room Name</label>
+                        <input type="text" id="create-room-name" class="festive-input w-full text-sm"
+                            placeholder="Our Secret Santa">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2 text-gray-700">Your Name</label>
+                        <input type="text" id="create-name" class="festive-input w-full text-sm" placeholder="John Doe">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2 text-gray-700">Your Preferences / Wishes</label>
+                        <textarea id="create-pref" class="festive-input w-full resize-none" rows="2"
+                            placeholder="I like books, coffee..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2 text-gray-700">Secret Message for your
+                            Santa</label>
+                        <input type="text" id="create-secret" class="festive-input w-full text-sm"
+                            placeholder="Happy Holidays!">
+                    </div>
                 </div>
-                <button id="create-poll-btn-mobile" onclick="openPollModal()"
-                    class="hidden text-xs bg-green-600 text-white px-3 py-1 rounded-full hover:bg-green-700">
-                    📊 Poll
+                <button onclick="createRoom()"
+                    class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-2xl font-bold shadow-lg transform transition hover:scale-[1.02]">
+                    Create Room
                 </button>
-            </div>
-            <div id="chat-messages-mobile" class="flex-1 overflow-y-auto p-4 space-y-3 bg-green-50"></div>
-            <div class="p-4 border-t border-gray-200 bg-white">
-                <form onsubmit="sendMessage(event)" class="flex gap-2 items-center">
-                    <button type="button" onclick="toggleEmojiPicker('mobile')"
-                        class="text-gray-500 hover:text-gray-700">
-                        <i data-lucide="smile" class="w-5 h-5"></i>
-                    </button>
-                    <input type="text" id="chat-input-mobile"
-                        class="flex-1 bg-gray-100 border-0 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                        placeholder="Message">
-                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full">
-                        <i data-lucide="send" class="w-4 h-4"></i>
-                    </button>
-                </form>
-                <div id="emoji-picker-mobile"
-                    class="hidden mt-3 p-3 bg-white rounded-xl border border-gray-200 emoji-picker"></div>
+                <button onclick="showView('home')"
+                    class="w-full text-gray-600 hover:text-gray-800 py-2 text-sm text-center">
+                    Back
+                </button>
             </div>
         </div>
 
-        <!-- Participants -->
-        <div class="glass p-6 rounded-3xl text-gray-800 order-5">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-semibold text-gray-800">Participants</h3>
-                <span id="participant-count" class="text-xs text-gray-500">0</span>
-            </div>
-            <div id="participants-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
-            <button id="toggle-participants-btn" onclick="toggleParticipantsList()"
-                class="hidden w-full mt-3 text-xs text-gray-600 hover:text-gray-800">
-                Show All
-            </button>
-        </div>
-    </div>
+        <!-- 3. Join Room View -->
+        <div id="view-join" class="hidden flex-1 flex items-center justify-center relative">
+            <!-- Decorative Icons -->
+            <div class="running-santa">🛷 🎅</div>
 
-    <!-- Chat (Desktop) -->
-    <div class="hidden lg:flex lg:w-96 glass rounded-3xl flex-col h-[600px]">
-        <div class="p-4 border-b border-gray-200 text-sm font-semibold text-gray-800 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <i data-lucide="message-circle" class="w-4 h-4 text-green-600"></i> Chat
+            <div
+                class="festive-card max-w-md w-full rounded-[32px] p-8 space-y-6 text-gray-800 relative overflow-hidden">
+                <!-- Inner Snowflake -->
+                <div class="absolute top-4 right-4 text-white/40 text-4xl">❄️</div>
+
+                <h2 class="text-3xl font-bold text-green-700 text-center drop-shadow-sm">Join a Room</h2>
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2 text-gray-700">Room Code</label>
+                        <input type="text" id="join-code"
+                            class="festive-input w-full text-sm uppercase tracking-widest font-mono"
+                            placeholder="ABC123" maxlength="6">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2 text-gray-700">Your Name</label>
+                        <input type="text" id="join-name" class="festive-input w-full text-sm" placeholder="Jane Smith">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2 text-gray-700">Your Preferences / Wishes</label>
+                        <textarea id="join-pref" class="festive-input w-full resize-none" rows="2"
+                            placeholder="I like plants, tea..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2 text-gray-700">Secret Message for your
+                            Santa</label>
+                        <input type="text" id="join-secret" class="festive-input w-full text-sm"
+                            placeholder="Merry Christmas!">
+                    </div>
+                </div>
+                <button onclick="joinRoom()"
+                    class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-2xl font-bold shadow-lg transform transition hover:scale-[1.02]">
+                    Join Room
+                </button>
+                <button onclick="showView('home')"
+                    class="w-full text-gray-600 hover:text-gray-800 py-2 text-sm text-center">
+                    Back
+                </button>
             </div>
-            <button id="create-poll-btn-desktop" onclick="openPollModal()"
-                class="hidden text-xs bg-green-600 text-white px-3 py-1 rounded-full hover:bg-green-700">
-                📊 Poll
-            </button>
         </div>
-        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-green-50"></div>
-        <div class="p-4 border-t border-gray-200 bg-white">
-            <form onsubmit="sendMessage(event)" class="flex gap-2 items-center">
-                <button type="button" onclick="toggleEmojiPicker('desktop')" class="text-gray-500 hover:text-gray-700">
-                    <i data-lucide="smile" class="w-5 h-5"></i>
-                </button>
-                <input type="text" id="chat-input"
-                    class="flex-1 bg-gray-100 border-0 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Message">
-                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full">
-                    <i data-lucide="send" class="w-4 h-4"></i>
-                </button>
-            </form>
-            <div id="emoji-picker-desktop"
-                class="hidden mt-3 p-3 bg-white rounded-xl border border-gray-200 emoji-picker"></div>
+
+        <!-- 4. Lobby View -->
+        <div id="view-lobby" class="hidden flex-1">
+            <div class="lg:flex lg:gap-6">
+                <!-- Main Content -->
+                <div class="flex-1 space-y-6">
+                    <!-- Room Info -->
+                    <div class="glass p-6 rounded-3xl text-gray-800">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <h2 id="lobby-room-name" class="text-2xl font-bold text-red-700">Room Name</h2>
+                                <div class="text-sm text-gray-500 mt-1" id="lobby-exchange-date">
+                                    Exchange Date: <span id="exchange-date-text"></span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-xs text-gray-500 mb-1">Room Code</div>
+                                <div class="font-mono text-2xl font-bold text-gray-800" id="lobby-code">------</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="copyCode()"
+                                class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 py-2 rounded-xl text-sm font-medium">
+                                <i data-lucide="copy" class="w-4 h-4 inline mr-1"></i> Copy Code
+                            </button>
+                            <button onclick="copyShareableLink()"
+                                class="flex-1 bg-green-50 hover:bg-green-100 text-green-600 py-2 rounded-xl text-sm font-medium">
+                                <i data-lucide="share-2" class="w-4 h-4 inline mr-1"></i> Share Link
+                            </button>
+                            <button id="close-room-btn" onclick="closeRoom()"
+                                class="hidden flex-1 bg-red-50 hover:bg-red-100 text-red-600 py-2 rounded-xl text-sm font-medium">
+                                Close Room
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Game Area (Match Reveal) -->
+                    <div id="game-area" class="hidden glass p-6 rounded-3xl text-center space-y-6 text-gray-800">
+                        <h3 class="text-xl font-bold text-green-700">🎁 You are the Secret Santa for...</h3>
+
+                        <div id="card-content"
+                            class="bg-green-50 p-6 rounded-2xl max-w-md mx-auto border-2 border-green-200 relative overflow-hidden">
+                            <!-- Decorative elements -->
+                            <div class="absolute top-0 right-0 -mt-4 -mr-4 text-6xl opacity-10">🎄</div>
+                            <div class="absolute bottom-0 left-0 -mb-4 -ml-4 text-6xl opacity-10">🎅</div>
+
+                            <div class="relative z-10">
+                                <div class="text-xs text-gray-500 mb-1 uppercase tracking-wider">Name</div>
+                                <div id="match-name" class="text-3xl font-bold text-gray-800 mb-6">Name</div>
+
+                                <div class="text-xs text-gray-500 mb-1 uppercase tracking-wider">Their Wishes</div>
+                                <div id="match-pref" class="text-lg text-gray-700 mb-6 font-medium">Preferences</div>
+
+                                <div class="text-xs text-gray-500 mb-1 uppercase tracking-wider">Secret Message</div>
+                                <div id="match-secret" class="text-sm text-gray-600 italic bg-white/50 p-3 rounded-lg">
+                                    Message</div>
+                            </div>
+                        </div>
+
+                        <button onclick="downloadCard()"
+                            class="text-sm text-gray-600 hover:text-gray-800 flex items-center gap-2 mx-auto">
+                            <i data-lucide="download" class="w-4 h-4"></i> Download Card
+                        </button>
+                    </div>
+
+                    <!-- Start Area -->
+                    <div class="glass p-6 rounded-3xl text-center space-y-4 text-gray-800">
+                        <div id="waiting-msg" class="text-sm text-gray-600">Waiting for host to start...</div>
+                        <button id="start-btn" onclick="startGame()"
+                            class="hidden w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-semibold shadow-lg">
+                            🎅 Start Secret Santa
+                        </button>
+                    </div>
+
+                    <!-- Participants -->
+                    <div class="glass p-6 rounded-3xl text-gray-800">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-semibold text-gray-800 flex items-center gap-2">
+                                <i data-lucide="users" class="w-5 h-5 text-red-500"></i> Participants
+                            </h3>
+                            <span id="participant-count"
+                                class="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-bold">0</span>
+                        </div>
+                        <div id="participants-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
+                        <button id="toggle-participants-btn" onclick="toggleParticipantsList()"
+                            class="hidden w-full mt-3 text-xs text-gray-600 hover:text-gray-800 font-medium">
+                            Show All
+                        </button>
+                    </div>
+
+                    <!-- Chat (Mobile) -->
+                    <div class="lg:hidden glass rounded-3xl flex flex-col h-96">
+                        <div
+                            class="p-4 border-b border-gray-200 text-sm font-semibold text-gray-800 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="message-circle" class="w-4 h-4 text-green-600"></i> Chat
+                            </div>
+                        </div>
+                        <div id="chat-messages-mobile" class="flex-1 overflow-y-auto p-4 space-y-3 chat-background">
+                        </div>
+                        <div class="p-4 border-t border-gray-200 bg-white">
+                            <form onsubmit="sendMessage(event)" class="flex gap-2 items-center">
+                                <button type="button" onclick="toggleEmojiPicker('mobile')"
+                                    class="text-gray-500 hover:text-gray-700">
+                                    <i data-lucide="smile" class="w-5 h-5"></i>
+                                </button>
+                                <input type="text" id="chat-input-mobile"
+                                    class="flex-1 bg-gray-100 border-0 rounded-full px-4 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                    placeholder="Message">
+                                <button type="submit"
+                                    class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full">
+                                    <i data-lucide="send" class="w-4 h-4"></i>
+                                </button>
+                            </form>
+                            <div id="emoji-picker-mobile"
+                                class="hidden mt-3 p-3 bg-white rounded-xl border border-gray-200 emoji-picker"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat (Desktop) -->
+                <div class="hidden lg:flex lg:w-96 glass rounded-3xl flex-col h-[600px]">
+                    <div
+                        class="p-4 border-b border-gray-200 text-sm font-semibold text-gray-800 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="message-circle" class="w-4 h-4 text-green-600"></i> Chat
+                        </div>
+                    </div>
+                    <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 chat-background"></div>
+                    <div class="p-4 border-t border-gray-200 bg-white">
+                        <form onsubmit="sendMessage(event)" class="flex gap-2 items-center">
+                            <button type="button" onclick="toggleEmojiPicker('desktop')"
+                                class="text-gray-500 hover:text-gray-700">
+                                <i data-lucide="smile" class="w-5 h-5"></i>
+                            </button>
+                            <input type="text" id="chat-input"
+                                class="flex-1 bg-gray-100 border-0 rounded-full px-4 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                placeholder="Message">
+                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full">
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                            </button>
+                        </form>
+                        <div id="emoji-picker-desktop"
+                            class="hidden mt-3 p-3 bg-white rounded-xl border border-gray-200 emoji-picker"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
     </div>
 
     <script src="modal.js"></script>
     <script src="notifications.js"></script>
     <script src="script.js"></script>
-    </div>
 </body>
 
 </html>

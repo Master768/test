@@ -38,18 +38,31 @@ class ConnectionManager:
     def __init__(self):
         # Map room_code -> List[WebSocket]
         self.active_connections: Dict[str, List[WebSocket]] = {}
+        # Map WebSocket -> {user_name, participant_id, room_code}
+        self.connection_data: Dict[WebSocket, Dict[str, str]] = {}
 
-    async def connect(self, websocket: WebSocket, room_code: str):
+    async def connect(self, websocket: WebSocket, room_code: str, user_name: str, participant_id: str):
         await websocket.accept()
         if room_code not in self.active_connections:
             self.active_connections[room_code] = []
         self.active_connections[room_code].append(websocket)
+        
+        # Store participant data for this connection
+        self.connection_data[websocket] = {
+            "user_name": user_name,
+            "participant_id": participant_id,
+            "room_code": room_code
+        }
 
-    def disconnect(self, websocket: WebSocket, room_code: str):
+    async def disconnect(self, websocket: WebSocket, room_code: str):
         if room_code in self.active_connections:
             self.active_connections[room_code].remove(websocket)
             if not self.active_connections[room_code]:
                 del self.active_connections[room_code]
+        
+        # Clean up connection data
+        if websocket in self.connection_data:
+            del self.connection_data[websocket]
 
     async def broadcast(self, message: str, room_code: str):
         if room_code in self.active_connections:
@@ -343,9 +356,9 @@ async def get_room_debug(room_code: str):
         room_data["_id"] = str(room_data["_id"])
     return room_data
 
-@app.websocket("/ws/{room_code}/{user_name}")
-async def websocket_endpoint(websocket: WebSocket, room_code: str, user_name: str):
-    await manager.connect(websocket, room_code)
+@app.websocket("/ws/{room_code}/{user_name}/{participant_id}")
+async def websocket_endpoint(websocket: WebSocket, room_code: str, user_name: str, participant_id: str):
+    await manager.connect(websocket, room_code, user_name, participant_id)
     try:
         # Announce join
         join_msg = json.dumps({"sender": "System", "message": f"{user_name} joined the chat.", "type": "system"})
@@ -363,10 +376,46 @@ async def websocket_endpoint(websocket: WebSocket, room_code: str, user_name: st
             await manager.broadcast(msg, room_code)
             
     except WebSocketDisconnect:
-        manager.disconnect(websocket, room_code)
+        await manager.disconnect(websocket, room_code)
+        
+        # Auto-remove participant if they're not the host and game hasn't started
+        try:
+            room_data = await db.db.rooms.find_one({"code": room_code})
+            if room_data:
+                room = Room(**room_data)
+                
+                # Find the participant
+                participant_to_remove = None
+                for p in room.participants:
+                    if p.id == participant_id:
+                        participant_to_remove = p
+                        break
+                
+                # Only auto-remove if: participant exists, not host, and game hasn't started
+                if participant_to_remove and not participant_to_remove.is_host and not room.is_started:
+                    # Remove from database
+                    await db.db.rooms.update_one(
+                        {"code": room_code},
+                        {"$pull": {"participants": {"id": participant_id}}}
+                    )
+                    
+                    # Broadcast removal notification
+                    removal_msg = json.dumps({
+                        "sender": "System",
+                        "message": f"{user_name} left the room.",
+                        "type": "participant_removed",
+                        "removed_id": participant_id,
+                        "reason": "left"
+                    })
+                    await manager.broadcast(removal_msg, room_code)
+        except Exception as e:
+            print(f"Error auto-removing participant: {e}")
 # Mount static files
 app.mount("/", StaticFiles(directory="frontend", html=True), name="static")
 
 if __name__ == "__main__":
     import uvicorn
+    # Note: Run 'python start_backend.py' from the project root instead
+    # This ensures proper module resolution for relative imports
     uvicorn.run("backend.main:app", host="0.0.0.0", port=8000, reload=True)
+

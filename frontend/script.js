@@ -70,6 +70,13 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+// Gracefully close WebSocket when user leaves or refreshes the page
+window.addEventListener('beforeunload', () => {
+    if (ws) {
+        ws.close();
+    }
+});
+
 function saveSession(room, user) {
     // ONLY save session if the user is the host
     if (user.is_host) {
@@ -158,9 +165,6 @@ function showView(viewId) {
 
     // Clear session if going home
     if (viewId === 'home') {
-        if (currentUser && !currentUser.is_host && currentRoom) {
-            leaveRoom(); // Notify backend
-        }
         clearSession();
         currentUser = null;
         currentRoom = null;
@@ -189,7 +193,7 @@ function showView(viewId) {
 // API Helpers
 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
 const API_BASE = isLocal
-    ? 'http://localhost:8080'
+    ? 'http://localhost:8000'
     : window.location.origin; // Automatically uses the current domain
 
 const API_URL = `${API_BASE}/api`;
@@ -330,7 +334,7 @@ function addChatMessage(data) {
     const chatDesktop = document.getElementById('chat-messages');
     const chatMobile = document.getElementById('chat-messages-mobile');
 
-    const isSystem = data.type === 'system';
+    const isSystem = data.type === 'system' || data.type === 'participant_removed';
     const isMe = data.sender === currentUser.name;
 
     const div = document.createElement('div');
@@ -388,7 +392,7 @@ function connectWebSocket() {
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const host = API_BASE ? API_BASE.replace(/^https?:\/\//, '') : window.location.host;
-    const wsUrl = `${protocol}//${host}/ws/${currentRoom.code}/${currentUser.name}`;
+    const wsUrl = `${protocol}//${host}/ws/${currentRoom.code}/${currentUser.name}/${currentUser.id}`;
 
     ws = new WebSocket(wsUrl);
 
