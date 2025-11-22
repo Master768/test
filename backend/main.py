@@ -207,6 +207,29 @@ async def start_game(room_code: str):
     # Shuffle
     updated_participants = assign_secret_santa(room.participants)
     
+    # Create pairings list to save to database
+    from .models import Pairing
+    pairings = []
+    for giver in updated_participants:
+        if giver.giftee_id:
+            # Find the receiver
+            receiver = next((p for p in updated_participants if p.id == giver.giftee_id), None)
+            if receiver:
+                pairing = Pairing(
+                    room_code=room_code,
+                    giver_name=giver.name,
+                    giver_id=giver.id,
+                    receiver_name=receiver.name,
+                    receiver_id=receiver.id,
+                    receiver_preferences=receiver.preferences,
+                    receiver_secret_message=receiver.secret_message
+                )
+                pairings.append(pairing.dict())
+    
+    # Save pairings to database
+    if pairings:
+        await db.db.pairings.insert_many(pairings)
+    
     # Save
     await db.db.rooms.update_one(
         {"code": room_code},

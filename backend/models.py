@@ -52,3 +52,15 @@ class ChatMessage(BaseModel):
     sender: str
     message: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+class Pairing(BaseModel):
+    """Represents a Secret Santa pairing relationship."""
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    room_code: str
+    giver_name: str
+    giver_id: str
+    receiver_name: str
+    receiver_id: str
+    receiver_preferences: str = ""
+    receiver_secret_message: str = ""
+    created_at: datetime = Field(default_factory=datetime.utcnow)
