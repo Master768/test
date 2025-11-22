@@ -412,6 +412,8 @@ function connectWebSocket() {
                 window.location.reload();
                 return;
             }
+            // Refresh participants list for host and show system message
+            pollRoomState();
         }
 
         // Handle poll creation
@@ -446,61 +448,43 @@ function sendMessage(e) {
     const msg = (inputDesktop?.value || inputMobile?.value || '').trim();
     if (!msg || !ws) return;
 
-    ws.send(JSON.stringify({ message: msg }));
+    // Include sender name for proper display on all clients
+    ws.send(JSON.stringify({ message: msg, sender: currentUser.name }));
     if (inputDesktop) inputDesktop.value = '';
     if (inputMobile) inputMobile.value = '';
 }
 
 // Lobby Logic
 function enterLobby() {
-    showView('lobby');
+    const startBtn = document.getElementById('start-btn');
+    const closeBtn = document.getElementById('close-room-btn');
+    const waitMsg = document.getElementById('waiting-msg');
+    const pollBtnDesktop = document.getElementById('create-poll-btn-desktop');
+    const pollBtnMobile = document.getElementById('create-poll-btn-mobile');
 
-    // Update Room Info
-    const codeEl = document.getElementById('lobby-code');
-    const nameEl = document.getElementById('lobby-room-name');
-    const dateContainer = document.getElementById('lobby-exchange-date');
-    const dateText = document.getElementById('exchange-date-text');
+    if (startBtn) startBtn.classList.remove('hidden');
+    if (closeBtn) closeBtn.classList.remove('hidden');
+    if (waitMsg) waitMsg.classList.add('hidden');
+    if (pollBtnDesktop) pollBtnDesktop.classList.remove('hidden');
+    if (pollBtnMobile) pollBtnMobile.classList.remove('hidden');
+}
 
-    if (codeEl) codeEl.innerText = currentRoom.code;
-    if (nameEl) nameEl.innerText = currentRoom.name || 'Secret Santa Room';
+// Initial Update
+participantsExpanded = false;
+updateParticipantsList(currentRoom.participants);
+updateGameState(currentRoom.participants, currentRoom.is_started);
 
-    if (currentRoom.exchange_date && dateContainer && dateText) {
-        const date = new Date(currentRoom.exchange_date);
-        dateText.innerText = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        dateContainer.classList.remove('hidden');
-    }
+// Render existing polls
+if (currentRoom.polls && currentRoom.polls.length > 0) {
+    currentRoom.polls.forEach(poll => addPollToChat(poll));
+}
 
-    // Show Host Controls
-    if (currentUser.is_host) {
-        const startBtn = document.getElementById('start-btn');
-        const closeBtn = document.getElementById('close-room-btn');
-        const waitMsg = document.getElementById('waiting-msg');
-        const pollBtnDesktop = document.getElementById('create-poll-btn-desktop');
-        const pollBtnMobile = document.getElementById('create-poll-btn-mobile');
+// Connect Chat
+connectWebSocket();
 
-        if (startBtn) startBtn.classList.remove('hidden');
-        if (closeBtn) closeBtn.classList.remove('hidden');
-        if (waitMsg) waitMsg.classList.add('hidden');
-        if (pollBtnDesktop) pollBtnDesktop.classList.remove('hidden');
-        if (pollBtnMobile) pollBtnMobile.classList.remove('hidden');
-    }
-
-    // Initial Update
-    participantsExpanded = false;
-    updateParticipantsList(currentRoom.participants);
-    updateGameState(currentRoom.participants, currentRoom.is_started);
-
-    // Render existing polls
-    if (currentRoom.polls && currentRoom.polls.length > 0) {
-        currentRoom.polls.forEach(poll => addPollToChat(poll));
-    }
-
-    // Connect Chat
-    connectWebSocket();
-
-    // Start Polling
-    if (pollInterval) clearInterval(pollInterval);
-    pollInterval = setInterval(pollRoomState, 3000);
+// Start Polling
+if (pollInterval) clearInterval(pollInterval);
+pollInterval = setInterval(pollRoomState, 3000);
 }
 
 // Actions
